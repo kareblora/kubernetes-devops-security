@@ -22,7 +22,7 @@ pipeline {
       stage('Docker build and push') {
             steps {
                 sh 'printenv'
-                sh 'docker build -t kareblora/numeric-app:""$GIT_COMMIT""'
+                sh 'docker build -t kareblora/numeric-app:""$GIT_COMMIT"" .'
                 sh 'docker push kareblora/numeric-app:""$GIT_COMMIT""'
               }
             }      
