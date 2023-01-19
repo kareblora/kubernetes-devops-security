@@ -28,7 +28,13 @@ pipeline {
                 pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
               }
             }
-        }  
+        } 
+      stage('SonarQube Analysis') {
+        def mvn = tool 'Default Maven';
+        withSonarQubeEnv() {
+          sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-application"
+        }
+      } 
       stage('Docker build and push') {
             steps {
               withDockerRegistry(credentialsId: 'docker-hub', url: '') {
