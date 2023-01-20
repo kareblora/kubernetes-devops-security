@@ -29,14 +29,12 @@ pipeline {
               }
             }
         } 
-      stage('SonarQube Analysis') {
-        steps {
-        def mvn = tool 'Default Maven';
-        withSonarQubeEnv() {
-          sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-application"
-        }
-        }
-      } 
+      stage('Sonarqube - SAST') {
+            steps {
+              sh "mvn clean verify sonar:sonar -Dsonar.projectKey=numeric-application -Dsonar.host.url=http://devsecops-demo-kar.eastus.cloudapp.azure.com:9000 -Dsonar.login=sqp_1e099b6890364dfeb54fe1c45e5ad6a9b1ad556e"
+            }
+        } 
+
       stage('Docker build and push') {
             steps {
               withDockerRegistry(credentialsId: 'docker-hub', url: '') {
