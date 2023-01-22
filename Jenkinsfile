@@ -36,8 +36,10 @@ pipeline {
                post { 
                   always { 
                     dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'   
-            }
-        } 
+                  }    
+               }
+            } 
+      }
       stage('Docker build and push') {
             steps {
               withDockerRegistry(credentialsId: 'docker-hub', url: '') {
@@ -62,5 +64,6 @@ pipeline {
           pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
           dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'                
       }
-    }   
+    }
+  }   
 }
