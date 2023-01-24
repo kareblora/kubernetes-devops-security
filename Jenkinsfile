@@ -35,12 +35,24 @@ pipeline {
             } 
         } 
       }
+  //    stage('Vulnerability Scan - Docker') {
+  //          steps {
+  //            sh "mvn dependency-check:check"
+  //          }
+  //    }
+
       stage('Vulnerability Scan - Docker') {
             steps {
-              sh "mvn dependency-check:check"
+              parallel(
+                "Dependency Scan": {
+                  sh "mvn dependency-check:check"
+                },
+                "Trivy Scan": {
+                  sh "bash trivy-docker-image-scan.sh"
+                }                
+              )
             }
       }
-
       stage('Docker build and push') {
             steps {
               withDockerRegistry(credentialsId: 'docker-hub', url: '') {
@@ -64,7 +76,7 @@ pipeline {
           junit 'target/surefire-reports/*.xml'
           jacoco execPattern: 'target/jacoco.exec'
           dependencyCheckPublisher pattern: 'target/dependency-check-report.xml' 
-          pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'                    
+  //        pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'                    
       }
   }   
 }
