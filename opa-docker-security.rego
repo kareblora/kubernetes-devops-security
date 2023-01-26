@@ -95,11 +95,11 @@ deny[msg] {
 }
 
 # Use multi-stage builds
-default multi_stage = false
-multi_stage = true {
-    input[i].Cmd == "copy"
-    val := concat(" ", input[i].Flags)
-    contains(lower(val), "--from=")
+#default multi_stage = false
+#multi_stage = true {
+#    input[i].Cmd == "copy"
+#    val := concat(" ", input[i].Flags)
+#    contains(lower(val), "--from=")
 }
 deny[msg] {
     multi_stage == false
