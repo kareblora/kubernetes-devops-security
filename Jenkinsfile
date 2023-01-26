@@ -60,6 +60,12 @@ pipeline {
               }
             }
       }  
+      stage('Vulnerability Scan - Kubernetes') {
+            steps {
+              sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
+            }
+        }       
+      
       stage('Kubernetes deployment - DEV') {
             steps {
               withKubeConfig(credentialsId: 'kubeconfig') {
