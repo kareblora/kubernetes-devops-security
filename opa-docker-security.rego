@@ -100,7 +100,7 @@ deny[msg] {
 #    input[i].Cmd == "copy"
 #    val := concat(" ", input[i].Flags)
 #    contains(lower(val), "--from=")
-}
+#}
 deny[msg] {
     multi_stage == false
     msg = sprintf("You COPY, but do not appear to use multi-stage builds...", [])
