@@ -118,13 +118,21 @@ pipeline {
               }
             }
       }
+      stage('OWASP ZAP - DAST') {
+            steps {
+              withKubeConfig(credentialsId: 'kubeconfig') {
+                sh 'bash zap.sh'
+              }
+            }
+      }      
 
   }
   post { 
       always { 
           junit 'target/surefire-reports/*.xml'
           jacoco execPattern: 'target/jacoco.exec'
-          dependencyCheckPublisher pattern: 'target/dependency-check-report.xml' 
+          dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+          publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap_report.html', reportName: 'OWASP ZAP HTML Report', reportTitles: 'OWASP ZAP HTML Report', useWrapperFileDirectly: true])
   //        pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'                    
       }
   }   
