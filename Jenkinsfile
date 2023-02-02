@@ -126,7 +126,31 @@ pipeline {
                 sh 'bash zap.sh'
               }
             }
-      }      
+      }     
+      stage('Prompt to Prod?') {
+            steps {
+              timeout(time: 2, unit: 'DAYS') {
+                input 'Do you want to Approve the Deployment to Production Environment/Namespace'
+              } 
+            }
+      }   
+      stage('K8s CIS benchmark') {
+            steps {
+              script {
+                parallel(
+                  "Master": {
+                      sh 'bash cis-master.sh'
+                  },
+                  "Etcd": {
+                      sh 'bash cis-etcd.sh'
+                  },       
+                  "Worker": {
+                      sh 'bash cis-worker.sh'
+                  },      
+                )
+              }
+            }
+      }
   }
   post { 
       always { 
