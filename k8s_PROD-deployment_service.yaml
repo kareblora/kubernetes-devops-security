@@ -5,7 +5,7 @@ metadata:
     app: devsecops
   name: devsecops
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: devsecops
@@ -29,6 +29,17 @@ spec:
           runAsNonRoot: true
           runAsUser: 100
           readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - NET_RAW
+          allowPrivilegeEscalation: false
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
 ---
 apiVersion: v1
 kind: Service
@@ -43,4 +54,4 @@ spec:
     targetPort: 8080
   selector:
     app: devsecops
-  type: NodePort
+  type: ClusterIP
